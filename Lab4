@@ -1,0 +1,74 @@
+# Main 
+def display_header():
+    print ("=" * 40)
+    print("Concert Ticket Pricer")
+    print("=" * 40)
+
+def is_valid_section(section):
+    return section == "floor" or section == "lower" or section == "upper" or section == "lawn"
+def get_section_surcharge(section):
+    match section:
+        case "floor":
+            return 40
+        case "lower":
+            return 20
+        case "upper":
+            return 5
+        case "lawn":
+            return 0
+        case _:
+            return 0.0
+def get_base_price(age):
+    if age >= 65:
+        base_price = 18
+    elif age >= 18:
+        base_price = 25
+    elif age >= 13:
+        base_price = 15
+    elif age >= 5:
+        base_price = 10
+    else:
+        base_price = 0
+    return base_price
+
+def is_discount_eligible(is_member, age):
+    return is_member and (age >= 18 or age < 13)
+
+def calculate_total(base_price, surcharge, discount_eligible, age):
+    if discount_eligible:
+        if age >= 65:
+            base_price = base_price * .80
+        else:
+            base_price = base_price * .85
+    total = base_price + surcharge
+    return total
+
+def display_receipt(age, section, base_price, surcharge, eligible, total):
+    print()
+    print("Base price: $", base_price)
+    print("Section surcharge: $", surcharge)
+
+    if eligible:
+        print("Member discount applied.")
+    print("Total: $", total)
+
+# Display header
+display_header()
+
+# Get inputs
+age = int(input("Enter customer age: "))
+section = input("Enter section (floor / lower / upper / lawn): ").strip().lower()
+if not is_valid_section(section):
+    print("Invalid section.")
+    exit()
+member_input = input("Is the customer a member? (yes/no): ").strip().lower()
+is_member = member_input == "yes"
+
+# Calculate
+base_price = get_base_price(age)
+surcharge = get_section_surcharge(section)
+eligible = is_discount_eligible(is_member, age)
+total = calculate_total(base_price, surcharge, eligible, age)
+
+# Display receipt
+display_receipt(age, section, base_price, surcharge, eligible, total)
